@@ -3,6 +3,11 @@ package com.example.saveToXML.dto;
 import lombok.Data;
 import java.util.Map;
 
+/**
+ * Класс хранения имени элементов XML файлов
+ * @author Ayrat Zagretdinov
+ * created on 15.06.2021
+ */
 @Data
 public class ElementDto {
     private String name;

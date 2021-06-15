@@ -5,13 +5,27 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import com.example.saveToXML.entity.Department;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 import javax.transaction.Transactional;
 
+/**
+ * @author Ayrat Zagretdinov
+ * created on 15.06.2021
+ */
 @Repository
 @Slf4j
 public class DepartmentRepository {
+
+    @Value("${com.example.saveToXML.messageDelete}")
+    private String MESSAGE_DELETE;
+
+    @Value("${com.example.saveToXML.messageUpdate}")
+    private String MESSAGE_UPDATE;
+
+    @Value("${com.example.saveToXML.messageInsert}")
+    private String MESSAGE_INSERT;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -24,17 +38,23 @@ public class DepartmentRepository {
     }
 
     @Transactional
-    public void databaseSynchronization(List<Department> deleteList, List<Department> updateList, List<Department> insertList) {
+    public int databaseSynchronization(List<Department> deleteList, List<Department> updateList, List<Department> insertList) {
         log.trace("starting method: public void saveList(List<Department> departmentList)");
+        int quantityDelete = 0, quantityUpdate = 0, quantityInsert = 0;
         if (!deleteList.isEmpty()) {
-            entityManager.createNativeQuery(buildDeleteQuery(deleteList)).executeUpdate();
+            quantityDelete = entityManager.createNativeQuery(buildDeleteQuery(deleteList)).executeUpdate();
+            log.info("{} {}", MESSAGE_DELETE, quantityDelete);
         }
         if (!updateList.isEmpty()) {
-            entityManager.createNativeQuery(buildUpdateQuery(updateList)).executeUpdate();
+            quantityUpdate = entityManager.createNativeQuery(buildUpdateQuery(updateList)).executeUpdate();
+            log.info("{} {}", MESSAGE_UPDATE, quantityUpdate);
         }
         if (!insertList.isEmpty()) {
-            entityManager.createNativeQuery(buildInsertQuery(insertList)).executeUpdate();
+            log.trace("insert = {}", insertList);
+            quantityInsert = entityManager.createNativeQuery(buildInsertQuery(insertList)).executeUpdate();
+            log.info("{} {}", MESSAGE_INSERT, quantityInsert);
         }
+        return quantityDelete + quantityUpdate + quantityInsert;
     }
 
     private String buildDeleteQuery(List<Department> departmentList) {

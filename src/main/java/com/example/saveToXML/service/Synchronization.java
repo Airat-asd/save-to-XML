@@ -4,12 +4,20 @@ import com.example.saveToXML.entity.Department;
 import com.example.saveToXML.repository.DepartmentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.util.*;
 
+/**
+ * @author Ayrat Zagretdinov
+ * created on 15.06.2021
+ */
 @Service
 @Slf4j
 public class Synchronization {
+
+    @Value("${com.example.saveToXML.messageNoChanges}")
+    private String MESSAGE_NO_CHANGES;
 
     @Autowired
     private DepartmentRepository repository;
@@ -23,7 +31,6 @@ public class Synchronization {
         List<Department> departmentListForDelete = new ArrayList<>();
 
         departmentListFromXML.forEach(department -> hashCodeMapFromXML.put(department.hashCode(), department));
-
         departmentListFromDB.forEach(departmentFromDB -> {
             int hashCodeFromDB = departmentFromDB.hashCode();
             if (hashCodeMapFromXML.containsKey(hashCodeFromDB)) {
@@ -31,18 +38,16 @@ public class Synchronization {
                 if (!departmentFromDB.getDescription().equals(departmentFromXML.getDescription())) {
                     departmentFromXML.setId(departmentFromDB.getId());
                     departmentListForUpdate.add(departmentFromXML);
-                    hashCodeMapFromXML.remove(hashCodeFromDB);
                 }
+                hashCodeMapFromXML.remove(hashCodeFromDB);
             } else {
                 departmentListForDelete.add(departmentFromDB);
             }
         });
-
         hashCodeMapFromXML.forEach((hashCode, department) -> departmentListForInsert.add(department));
-
-        log.trace("insert = {}", departmentListForInsert);//delete
-        log.trace("delete = {}", departmentListForDelete);//delete
-        log.trace("update = {}", departmentListForUpdate);//delete
-        repository.databaseSynchronization(departmentListForDelete, departmentListForUpdate, departmentListForInsert);
+        int quantitySync = repository.databaseSynchronization(departmentListForDelete, departmentListForUpdate, departmentListForInsert);
+        if (quantitySync == 0 ) {
+            log.info(MESSAGE_NO_CHANGES);
+        }
     }
 }

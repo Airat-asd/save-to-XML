@@ -6,6 +6,11 @@ import javax.persistence.*;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Класс таблицы БД Department
+ * @author Ayrat Zagretdinov
+ * created on 15.06.2021
+ */
 @Getter
 @Setter
 @NoArgsConstructor
@@ -31,16 +36,28 @@ public class Department extends HashEquals implements XmlType {
     @Column(length = 255)
     private String description;
 
+    /**
+     * Функция получения root элемента XML файла
+     * @return возвращает ElementDto
+     */
     @Override
     public Map<String, String> getRoot() {
         return new HashMap<>();
     }
 
+    /**
+     * Функция получения имя root элемента XML файла
+     * @return возвращает ElementDto
+     */
     @Override
     public String getRootName() {
         return ROOT_NAME;
     }
 
+    /**
+     * Функция получения элемента XML файла
+     * @return возвращает ElementDto
+     */
     @Override
     public ElementDto getElement() {
         Map<String, String> attributes = new HashMap<>();

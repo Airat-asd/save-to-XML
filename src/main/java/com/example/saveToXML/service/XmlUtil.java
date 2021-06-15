@@ -5,25 +5,25 @@ import com.example.saveToXML.entity.XmlType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.*;
-import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Ayrat Zagretdinov
+ * created on 15.06.2021
+ */
 @Service
 @Slf4j
 public class XmlUtil<T extends XmlType>{
+    private DocumentBuilderXML documentBuilderXML = new DocumentBuilderXML();
 
-    public Document marshall(List<? extends XmlType> xmlTypeList) throws ParserConfigurationException { //сделать проверку на null
+    public Document marshall(List<? extends XmlType> xmlTypeList) {
         log.trace("start method: public Document marshall(List<? extends XmlType> xmlTypeList)");
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+        DocumentBuilder documentBuilder = documentBuilderXML.newDocumentBuilder();
         Document document = documentBuilder.newDocument();
 
         XmlType rootXmlType = xmlTypeList.get(0);
@@ -49,11 +49,9 @@ public class XmlUtil<T extends XmlType>{
         return document;
     }
 
-    public List<ElementDto> unmarshall(File file, XmlType xmlType) throws ParserConfigurationException, IOException, SAXException {
+    public List<ElementDto> unmarshall(File file, XmlType xmlType) {
         log.trace("start method: public void unmarshall(File file)");
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = factory.newDocumentBuilder();
-        Document document = builder.parse(file);
+        Document document = documentBuilderXML.parse(file);
 
         List<ElementDto> elementDtoList = new ArrayList<>();
         Element documentElement = document.getDocumentElement();
