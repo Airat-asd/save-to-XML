@@ -3,15 +3,17 @@ package com.example.saveToXML.repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-
 import com.example.saveToXML.entity.Department;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
 import javax.transaction.Transactional;
 
+/**
+ * @author Ayrat Zagretdinov
+ * created on 15.06.2021
+ */
 @Repository
 @Slf4j
 public class DepartmentRepository {

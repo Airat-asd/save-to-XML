@@ -12,6 +12,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+/**
+ * @author Ayrat Zagretdinov
+ * created on 15.06.2021
+ */
 @Service
 @Slf4j
 public class FileUtil {

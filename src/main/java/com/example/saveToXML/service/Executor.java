@@ -11,12 +11,17 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
+
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * @author Ayrat Zagretdinov
+ * created on 15.06.2021
+ */
 @Component
 @Slf4j
 public class Executor implements InitializingBean {
@@ -64,7 +69,7 @@ public class Executor implements InitializingBean {
     Synchronization synchronization;
 
     @Override
-    public void afterPropertiesSet() throws ParserConfigurationException, IOException, SAXException {
+    public void afterPropertiesSet() {
         log.trace("start method: public void afterPropertiesSet()");
         String[] parameters = applicationArguments.getSourceArgs();
         if (parameters.length < 2) {
@@ -85,20 +90,14 @@ public class Executor implements InitializingBean {
                         Department department = dtoUtil.element2Department(elementDto);
                         boolean add = departmentList.add(department);
                         if (!add) {
-                            try {
-                                throw new Exception(ERROR_UNIQUE_ID);
-                            } catch (Exception e) {
-                                log.error("{}", e);
-                            }
+                            log.error("{}", ERROR_UNIQUE_ID);
+                            throw new RuntimeException(ERROR_UNIQUE_ID);
                         }
                     });
-
                     synchronization.synchronize(departmentList);
-
                 } else {
-                    IllegalArgumentException exception = new IllegalArgumentException(ERROR_INVALID_COMMAND);
-                    log.error("{}", exception.getMessage());
-                    throw exception;
+                    log.error("{}", ERROR_INVALID_COMMAND);
+                    throw new RuntimeException(ERROR_INVALID_COMMAND);
                 }
             }
         }

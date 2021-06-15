@@ -2,6 +2,10 @@ package com.example.saveToXML.entity;
 
 import java.util.Objects;
 
+/**
+ * @author Ayrat Zagretdinov
+ * created on 15.06.2021
+ */
 public class HashEquals {
 
     public boolean equalsDIY(Department first, Object second) {
