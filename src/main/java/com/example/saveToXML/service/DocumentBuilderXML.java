@@ -25,8 +25,8 @@ public class DocumentBuilderXML {
             return documentBuilder;
         } catch (ParserConfigurationException e) {
             log.error("{}", e);
+            throw new RuntimeException(e);
         }
-        return documentBuilder;
     }
 
     public Document parse(File file) {
@@ -36,7 +36,7 @@ public class DocumentBuilderXML {
             return document;
         } catch (SAXException | IOException e) {
             log.error("{}", e);
+            throw new RuntimeException(e);
         }
-        return document;
     }
 }
